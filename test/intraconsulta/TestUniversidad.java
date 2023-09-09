@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TestUniversidad {
-
+	
+	// MATERIA //
+	
 	@Test
 	public void queSePuedaRegistrarUnaMateria() {
 		Universidad unlam = new Universidad();
@@ -27,11 +29,9 @@ public class TestUniversidad {
 		Materia pb2 = new Materia(nombre, codigo);
 		Materia repetidaPorNombre = new Materia(nombre, Integer.valueOf(335));
 		Materia repetidaPorCodigo = new Materia("bdd", codigo);
+		unlam.registrarMateria(pb2);
 		
-		boolean resultado = unlam.registrarMateria(pb2);
-		assertTrue(resultado);
-		
-		resultado = unlam.registrarMateria(repetidaPorNombre);
+		boolean resultado = unlam.registrarMateria(repetidaPorNombre);
 		assertFalse(resultado);
 
 		resultado = unlam.registrarMateria(repetidaPorCodigo);
@@ -68,5 +68,37 @@ public class TestUniversidad {
 		resultado = unlam.agregarMateriaCorrelativa(pb2, pb1);
 		assertFalse(resultado);
 	}
-
+	
+	// ALUMNO // 
+	
+	@Test
+	public void queSePuedaRegistrarUnAlumno() {
+		Universidad unlam = new Universidad();
+		String nombre = "Lorenzo", apellido = "Noceda";
+		Integer dni = 43469499;
+		Alumno alumno = new Alumno(nombre, apellido, dni);
+		
+		unlam.registrarAlumno(alumno);
+		Alumno alumnoObtenido = unlam.getAlumnos().get(0);
+		
+		assertEquals(alumno, alumnoObtenido);	
+	}
+	
+	@Test
+	public void queNoSePuedaRegistrarUnAlumnoYaExistente() {
+		Universidad unlam = new Universidad();
+		String nombre = "Lorenzo", apellido = "Noceda";
+		Integer dni = 43469499;
+		Alumno alumno1 = new Alumno(nombre, apellido, dni);
+		Alumno alumno2 = new Alumno("Juan", "Perez", dni);
+		
+		boolean resultado = unlam.registrarAlumno(alumno1);
+		assertTrue(resultado);
+		
+		resultado = unlam.registrarAlumno(alumno2);
+		assertFalse(resultado);
+	}
+	
+	
+	
 }

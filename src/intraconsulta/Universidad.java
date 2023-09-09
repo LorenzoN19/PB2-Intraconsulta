@@ -3,8 +3,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Universidad {
-	ArrayList<Materia> materias = new ArrayList<>();
-
+	private ArrayList<Materia> materias;
+	private ArrayList<Alumno> alumnos;
+	
+	public Universidad() {
+		materias = new ArrayList<>();
+		alumnos = new ArrayList<>();
+	}
+	
+	// MATERIAS //
+	
 	public boolean registrarMateria(Materia materia) {
 		if(materias.contains(materia))
 			return false;
@@ -24,6 +32,22 @@ public class Universidad {
 		this.materias = materias;
 	}
 
+	// ALUMNOS //
+	
+	public boolean registrarAlumno(Alumno alumno) {
+		if(alumnos.contains(alumno))
+			return false;
+		
+		return alumnos.add(alumno);
+	}
 
+	public ArrayList<Alumno> getAlumnos() {
+		return alumnos;
+	}
+
+	public void setAlumnos(ArrayList<Alumno> alumnos) {
+		this.alumnos = alumnos;
+	}
+	
 
 }
