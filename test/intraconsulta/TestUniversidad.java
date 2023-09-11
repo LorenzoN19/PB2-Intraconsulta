@@ -7,6 +7,7 @@ public class TestUniversidad {
 	
 	// MATERIA //
 	
+	
 	@Test
 	public void queSePuedaRegistrarUnaMateria() {
 		Universidad unlam = new Universidad();
@@ -68,7 +69,9 @@ public class TestUniversidad {
 		assertFalse(resultado);
 	}
 	
+	
 	// ALUMNO // 
+	
 	
 	@Test
 	public void queSePuedaRegistrarUnAlumno() {
@@ -98,6 +101,33 @@ public class TestUniversidad {
 		assertFalse(resultado);
 	}
 	
+	
+	// AULA // 
+	
+	@Test
+	public void queSePuedaRegistrarUnAula() {
+		Universidad unlam = new Universidad();
+		Integer numero = 26, capacidadTotal = 80;
+		Aula aula = new Aula(numero, capacidadTotal);
+		
+		unlam.registrarAula(aula);
+		Aula aulaObtenida = unlam.getAulas().get(0);
+		
+		assertEquals(aula, aulaObtenida);	
+	}
+	
+	@Test
+	public void queNoSePuedaRegistrarUnAulaYaExistente() {
+		Universidad unlam = new Universidad();
+		Integer numero = 26, capacidadTotal = 80;
+		Aula aula = new Aula(numero, capacidadTotal);
+		Aula aula2 = new Aula(numero, Integer.valueOf(50));
+		unlam.registrarAula(aula);
+
+		boolean resultado = unlam.registrarAula(aula2);
+		
+		assertFalse(resultado);	
+	}
 	
 	
 }
