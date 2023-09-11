@@ -1,12 +1,16 @@
 package intraconsulta;
 
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
 import org.junit.Test;
+
+import enums.*;
 
 public class TestUniversidad {
 	
-	// MATERIA //
-	
+// MATERIA //
 	
 	@Test
 	public void queSePuedaRegistrarUnaMateria() {
@@ -69,9 +73,7 @@ public class TestUniversidad {
 		assertFalse(resultado);
 	}
 	
-	
-	// ALUMNO // 
-	
+// ALUMNO // 
 	
 	@Test
 	public void queSePuedaRegistrarUnAlumno() {
@@ -101,8 +103,7 @@ public class TestUniversidad {
 		assertFalse(resultado);
 	}
 	
-	
-	// AULA // 
+// AULA // 
 	
 	@Test
 	public void queSePuedaRegistrarUnAula() {
@@ -129,5 +130,40 @@ public class TestUniversidad {
 		assertFalse(resultado);	
 	}
 	
+// COMISION //
+	
+	public void queSePuedaRegistrarUnaComision() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("pb2", 2300);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		ArrayList<Alumno> alumnos = new ArrayList<>();
+		alumnos.add(new Alumno("Lorenzo", "Noceda", 43469499));
+		alumnos.add(new Alumno("Juan", "Perez", 45345353));
+		Integer codigo = 3454;
+		Comision comision = new Comision(codigo, aula, materia, alumnos, cicloLectivo);
+		
+		unlam.registrarComision(comision);
+		
+		assertEquals(comision, unlam.getComisiones().get(0));
+	}
+	
+	public void queNoPuedaRegistrarUnaComisionYaExistente() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("pb2", 2300);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		ArrayList<Alumno> alumnos = new ArrayList<>();
+		alumnos.add(new Alumno("Lorenzo", "Noceda", 43469499));
+		alumnos.add(new Alumno("Juan", "Perez", 45345353));
+		Integer codigo = 3454;
+		Comision comision = new Comision(codigo, aula, materia, alumnos, cicloLectivo);
+		Comision comision2 = new Comision(codigo, aula, materia, alumnos, cicloLectivo);
+		unlam.registrarComision(comision);
+		
+		boolean resultado = unlam.registrarComision(comision2);
+		
+		assertFalse(resultado);
+	}
 	
 }

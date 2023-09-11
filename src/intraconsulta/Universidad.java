@@ -5,6 +5,7 @@ public class Universidad {
 	private ArrayList<Materia> materias;
 	private ArrayList<Alumno> alumnos;
 	private ArrayList<Aula> aulas;
+	private ArrayList<Comision> comisiones;
 	
 	public Universidad() {
 		materias = new ArrayList<>();
@@ -12,9 +13,7 @@ public class Universidad {
 		aulas = new ArrayList<>();
 	}
 	
-	
-	// MATERIAS //
-	
+// MATERIA //
 	
 	public boolean registrarMateria(Materia materia) {
 		if(materias.contains(materia))
@@ -34,10 +33,8 @@ public class Universidad {
 	public void setMaterias(ArrayList<Materia> materias) {
 		this.materias = materias;
 	}
-
 	
-	// ALUMNOS //
-	
+// ALUMNO //
 	
 	public boolean registrarAlumno(Alumno alumno) {
 		if(alumnos.contains(alumno))
@@ -54,9 +51,7 @@ public class Universidad {
 		this.alumnos = alumnos;
 	}
 	
-	
-	// AULAS //
-	
+// AULA //
 	
 	public boolean registrarAula(Aula aula) {
 		if(aulas.contains(aula))
@@ -73,7 +68,23 @@ public class Universidad {
 
 	public void setAulas(ArrayList<Aula> aulas) {
 		this.aulas = aulas;
-	}	
+	}
 	
+// COMISION //
+	
+	public boolean registrarComision(Comision comision) {
+		if(comisiones.contains(comision))
+			return false;
+		
+		return comisiones.add(comision);
+	}
+
+	public ArrayList<Comision> getComisiones() {
+		return comisiones;
+	}
+
+	public void setComisiones(ArrayList<Comision> comisiones) {
+		this.comisiones = comisiones;
+	}	
 
 }

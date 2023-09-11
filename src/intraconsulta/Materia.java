@@ -45,7 +45,6 @@ public class Materia {
 		return correlativas.add(correlativa);
 	}
 	
-	
 	@Override
 	public boolean equals(Object obj) {
 	    if (this == obj) {
@@ -62,5 +61,5 @@ public class Materia {
 	public int hashCode() {
 	    return Objects.hash(codigo, nombre);
 	}
-
+	
 }

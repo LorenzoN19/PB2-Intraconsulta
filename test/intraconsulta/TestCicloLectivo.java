@@ -8,10 +8,11 @@ public class TestCicloLectivo {
 
 	@Test
 	public void queSePuedaDeclararUnCicloLectivo() {
-		Cuatrimestre cuatrimestre = Cuatrimestre.PRIMER_CUATRIMESTRE;
 		Turno turno = Turno.MAÑANA;
+		Cuatrimestre cuatrimestre = Cuatrimestre.PRIMER_CUATRIMESTRE;
+		Integer año = 2023;
 		
-		CicloLectivo cicloLectivo = new CicloLectivo(cuatrimestre, turno);
+		CicloLectivo cicloLectivo = new CicloLectivo(turno, cuatrimestre, año);
 		
 		assertNotNull(cicloLectivo);
 	}
