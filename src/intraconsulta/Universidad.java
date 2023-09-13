@@ -6,11 +6,14 @@ public class Universidad {
 	private ArrayList<Alumno> alumnos;
 	private ArrayList<Aula> aulas;
 	private ArrayList<Comision> comisiones;
+	private ArrayList<AsigComisionAlumno> asignacionesAlumno;
 	
 	public Universidad() {
 		materias = new ArrayList<>();
 		alumnos = new ArrayList<>();
 		aulas = new ArrayList<>();
+		comisiones = new ArrayList<>();
+		asignacionesAlumno = new ArrayList<>();
 	}
 	
 // MATERIA //
@@ -85,6 +88,55 @@ public class Universidad {
 
 	public void setComisiones(ArrayList<Comision> comisiones) {
 		this.comisiones = comisiones;
+	}
+
+// COMISION-ALUMNO //
+	
+	public boolean inscribirAlumno(AsigComisionAlumno asignacion) {
+		if(asignacionesAlumno.contains(asignacion))
+			return false;
+		
+		Materia materiaObtenida = asignacion.getComision().getMateria();
+		if(materiaObtenida.getCorrelativas().isEmpty())
+			return asignacionesAlumno.add(asignacion);			
+
+		Integer contador = 0, numDeCorrelativas = materiaObtenida.getCorrelativas().size();
+		Alumno alumno = asignacion.getAlumno();
+		for(int i=0; i<numDeCorrelativas; i++) {
+			Materia correlativa = materiaObtenida.getCorrelativas().get(i);
+			if(aproboCorrelativa(alumno, correlativa))
+				contador++;
+		}
+		
+		if(contador.equals(numDeCorrelativas))
+			return asignacionesAlumno.add(asignacion);
+		
+		return false;
+	}
+
+	private boolean aproboCorrelativa(Alumno alumnoRecibido, Materia correlativa) {
+		Integer numDeAsignaciones = asignacionesAlumno.size();
+		for(int i=0; i<numDeAsignaciones; i++) {
+			AsigComisionAlumno asignacion = asignacionesAlumno.get(i);
+			Alumno alumno = asignacion.getAlumno();
+			Materia materia = asignacion.getComision().getMateria();
+			Integer nota = asignacion.getNota();
+			if(alumno.equals(alumnoRecibido) && materia.equals(correlativa) && nota >= 7)
+				return true;
+		}
+		return false;
+}
+
+	public ArrayList<AsigComisionAlumno> getAsignacionesAlumno() {
+		return asignacionesAlumno;
+	}
+
+	public void setAsignacionesAlumno(ArrayList<AsigComisionAlumno> asignacionesAlumno) {
+		this.asignacionesAlumno = asignacionesAlumno;
+	}
+
+	public void asignarNota(AsigComisionAlumno asignacion, Integer nota) {
+		asignacion.asignarNota(nota);
 	}	
 
 }

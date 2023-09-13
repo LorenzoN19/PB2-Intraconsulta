@@ -3,9 +3,7 @@ package intraconsulta;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-
 import org.junit.Test;
-
 import enums.*;
 
 public class TestUniversidad {
@@ -132,36 +130,144 @@ public class TestUniversidad {
 	
 // COMISION //
 	
+	@Test
 	public void queSePuedaRegistrarUnaComision() {
 		Universidad unlam = new Universidad();
 		Materia materia = new Materia("pb2", 2300);
 		Aula aula = new Aula(15, 90);
 		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
-		ArrayList<Alumno> alumnos = new ArrayList<>();
-		alumnos.add(new Alumno("Lorenzo", "Noceda", 43469499));
-		alumnos.add(new Alumno("Juan", "Perez", 45345353));
 		Integer codigo = 3454;
-		Comision comision = new Comision(codigo, aula, materia, alumnos, cicloLectivo);
+		Comision comision = new Comision(codigo, aula, materia, cicloLectivo);
 		
 		unlam.registrarComision(comision);
 		
 		assertEquals(comision, unlam.getComisiones().get(0));
 	}
 	
+	@Test
 	public void queNoPuedaRegistrarUnaComisionYaExistente() {
 		Universidad unlam = new Universidad();
 		Materia materia = new Materia("pb2", 2300);
 		Aula aula = new Aula(15, 90);
 		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
-		ArrayList<Alumno> alumnos = new ArrayList<>();
-		alumnos.add(new Alumno("Lorenzo", "Noceda", 43469499));
-		alumnos.add(new Alumno("Juan", "Perez", 45345353));
 		Integer codigo = 3454;
-		Comision comision = new Comision(codigo, aula, materia, alumnos, cicloLectivo);
-		Comision comision2 = new Comision(codigo, aula, materia, alumnos, cicloLectivo);
+		Comision comision = new Comision(codigo, aula, materia, cicloLectivo);
+		Comision comision2 = new Comision(codigo, aula, materia, cicloLectivo);
 		unlam.registrarComision(comision);
 		
 		boolean resultado = unlam.registrarComision(comision2);
+		
+		assertFalse(resultado);
+	}
+	
+// COMISION-ALUMNO //
+	
+	@Test
+	public void queSePuedaInscribirUnAlumnoAUnaComisionQueNoRequieraCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("pb2", 2300);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Comision comision = new Comision(2233, aula, materia, cicloLectivo);
+		Integer idAsignacion = 3454;
+		AsigComisionAlumno asignacion = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		
+		unlam.inscribirAlumno(asignacion);
+		
+		assertEquals(asignacion, unlam.getAsignacionesAlumno().get(0));
+	}
+
+	@Test
+	public void queNoSePuedanRealizarDosAsignacionesConMismoId() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("pb2", 2300);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Alumno alumno2 = new Alumno("Juan", "Perez", 34345453);
+		Comision comision = new Comision(2233, aula, materia, cicloLectivo);
+		Integer idAsignacion = 3454;
+		AsigComisionAlumno asignacion = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		AsigComisionAlumno asignacion2 = new AsigComisionAlumno(idAsignacion, comision, alumno2);
+		
+		unlam.inscribirAlumno(asignacion);
+		boolean resultado = unlam.inscribirAlumno(asignacion2);
+		
+		assertFalse(resultado);
+	}
+
+	@Test
+	public void queUnAlumnoNoSePuedaInscribirDosVecesAUnaMismaComision() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("pb2", 2300);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Comision comision = new Comision(2233, aula, materia, cicloLectivo);
+		Integer idAsignacion = 3454;
+		AsigComisionAlumno asignacion = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		AsigComisionAlumno asignacion2 = new AsigComisionAlumno(454, comision, alumno);
+		
+		unlam.inscribirAlumno(asignacion);
+		boolean resultado = unlam.inscribirAlumno(asignacion2);
+		
+		assertFalse(resultado);
+	}
+	
+	@Test
+	public void queSeLePuedaAsignarLaNotaAUnAlumnoEnUnaComision() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo);
+		Integer idAsignacion = 3454;
+		AsigComisionAlumno asignacion = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		unlam.inscribirAlumno(asignacion);
+		
+		unlam.asignarNota(asignacion, 7);
+		
+		assertEquals(Integer.valueOf(7), asignacion.getNota());
+	}
+	
+	@Test
+	public void queSePuedaInscribirUnAlumnoAUnaComisionSiAproboLasCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		Materia pb = new Materia("pb", 2100);
+		unlam.agregarMateriaCorrelativa(pb2, pb);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Comision comisionPb = new Comision(23, aula, pb, cicloLectivo);
+		Comision comisionPb2 = new Comision(2233, aula, pb2, cicloLectivo);
+		Integer idAsignacion = 3454;
+		AsigComisionAlumno asignacionPb = new AsigComisionAlumno(221, comisionPb, alumno);
+		unlam.inscribirAlumno(asignacionPb);
+		unlam.asignarNota(asignacionPb, 7);
+		AsigComisionAlumno asignacionPb2 = new AsigComisionAlumno(idAsignacion, comisionPb2, alumno);
+		
+		boolean resultado = unlam.inscribirAlumno(asignacionPb2);
+		
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queNoSePuedaInscribirUnAlumnoAUnaComisionSiNoAproboLasCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		Materia pb = new Materia("pb", 2100);
+		unlam.agregarMateriaCorrelativa(pb2, pb);
+		Aula aula = new Aula(15, 90);
+		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo);
+		Integer idAsignacion = 3454;
+		AsigComisionAlumno asignacion = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		
+		boolean resultado = unlam.inscribirAlumno(asignacion);
 		
 		assertFalse(resultado);
 	}

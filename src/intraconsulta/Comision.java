@@ -1,6 +1,5 @@
 package intraconsulta;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Comision {
@@ -8,14 +7,12 @@ public class Comision {
 	private Integer codigo;
 	private Aula aula;
 	private Materia materia;
-	private ArrayList<Alumno> alumnos;
 	private CicloLectivo cicloLectivo;
 
-	public Comision(Integer codigo, Aula aula, Materia materia, ArrayList<Alumno> alumnos, CicloLectivo cicloLectivo) {
+	public Comision(Integer codigo, Aula aula, Materia materia, CicloLectivo cicloLectivo) {
 		this.codigo = codigo;
 		this.aula = aula;
 		this.materia = materia;
-		alumnos = new ArrayList<>();
 		this.cicloLectivo = cicloLectivo;
 	}
 
@@ -41,14 +38,6 @@ public class Comision {
 
 	public void setMateria(Materia materia) {
 		this.materia = materia;
-	}
-
-	public ArrayList<Alumno> getAlumnos() {
-		return alumnos;
-	}
-
-	public void setAlumnos(ArrayList<Alumno> alumnos) {
-		this.alumnos = alumnos;
 	}
 
 	public CicloLectivo getCicloLectivo() {
