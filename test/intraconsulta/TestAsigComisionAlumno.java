@@ -17,7 +17,7 @@ public class TestAsigComisionAlumno {
 		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
 		Integer codigoComision = 3454;
 		Comision comision = new Comision(codigoComision, aula, materia, cicloLectivo);
-		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, null);
 		
 		AsigComisionAlumno cursada = new AsigComisionAlumno(id, comision, alumno);
 		
@@ -32,7 +32,7 @@ public class TestAsigComisionAlumno {
 		CicloLectivo cicloLectivo = new CicloLectivo(Turno.MAÑANA, Cuatrimestre.PRIMER_CUATRIMESTRE, 2023);
 		Integer codigoComision = 3454;
 		Comision comision = new Comision(codigoComision, aula, materia, cicloLectivo);
-		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, null);
 		
 		AsigComisionAlumno asignacion = new AsigComisionAlumno(id, comision, alumno);
 		AsigComisionAlumno asignacion2 = new AsigComisionAlumno(id, comision, alumno);

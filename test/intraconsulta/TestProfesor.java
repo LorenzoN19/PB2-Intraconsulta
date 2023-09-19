@@ -6,31 +6,31 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-public class TestAlumno {
+public class TestProfesor {
 
 	@Test
-	public void queSePuedaCrearUnAlumno() {
+	public void queSePuedaCrearUnProfesor() {
 		String nombre = "Lorenzo", apellido = "Noceda";
 		Integer dni = 43469499;
 		LocalDate fechaDeNacimiento = LocalDate.of(2001, 11, 19);
 		LocalDate fechaDeIngreso = LocalDate.of(2022, 3, 10);
 		
-		Alumno alumno = new Alumno(nombre, apellido, dni, fechaDeNacimiento, fechaDeIngreso);
+		Profesor profesor = new Profesor(nombre, apellido, dni, fechaDeNacimiento, fechaDeIngreso);
 		
-		assertNotNull(alumno);
+		assertNotNull(profesor);
 	}
 	
 	@Test
-	public void queDosAlumnosConMismoDNISeanConsideradosObjetosIguales() {
+	public void queDosProfesoresConMismoDNISeanConsideradosObjetosIguales() {
 		String nombre = "Lorenzo", apellido = "Noceda";
 		Integer dni = 43469499;
 		LocalDate fechaDeNacimiento = LocalDate.of(2001, 11, 19);
 		LocalDate fechaDeIngreso = LocalDate.of(2022, 3, 10);
 		
-		Alumno alumno = new Alumno(nombre, apellido, dni, fechaDeNacimiento, fechaDeIngreso);
-		Alumno alumnoConMismoDni = new Alumno("Juan", "Perez", dni, fechaDeNacimiento, fechaDeIngreso);
+		Profesor profesor = new Profesor(nombre, apellido, dni, fechaDeNacimiento, fechaDeIngreso);
+		Profesor profesorConMismoDni = new Profesor("Juan", "Perez", dni, fechaDeNacimiento, fechaDeIngreso);
 		
-		assertEquals(alumno, alumnoConMismoDni);
+		assertEquals(profesor, profesorConMismoDni);
 	}
 
 }

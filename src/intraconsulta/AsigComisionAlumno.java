@@ -7,7 +7,9 @@ public class AsigComisionAlumno {
 	private Integer id;
 	private Comision comision;
 	private Alumno alumno;
-	private Integer nota;
+	private Nota[] parciales;
+	private Integer notaFinal;
+	
 
 	public AsigComisionAlumno(Integer id, Comision comision, Alumno alumno) {
 		this.id = id;

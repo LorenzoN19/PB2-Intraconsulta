@@ -3,14 +3,14 @@ package intraconsulta;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Alumno {
+public class Profesor {
 	private String nombre;
 	private String apellido;
 	private Integer dni;
 	private LocalDate fechaDeNacimiento;
 	private LocalDate fechaDeIngreso;
-
-	public Alumno(String nombre, String apellido, Integer dni, LocalDate fechaDeNacimiento, LocalDate fechaDeIngreso) {
+	
+	public Profesor(String nombre, String apellido, Integer dni, LocalDate fechaDeNacimiento, LocalDate fechaDeIngreso) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.dni = dni;
@@ -71,9 +71,7 @@ public class Alumno {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Alumno other = (Alumno) obj;
+		Profesor other = (Profesor) obj;
 		return Objects.equals(dni, other.dni);
 	}
-
-	
 }

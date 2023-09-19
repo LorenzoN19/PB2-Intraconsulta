@@ -4,24 +4,24 @@ import java.util.Objects;
 
 public class Comision {
 
-	private Integer codigo;
+	private Integer id;
 	private Aula aula;
 	private Materia materia;
 	private CicloLectivo cicloLectivo;
 
-	public Comision(Integer codigo, Aula aula, Materia materia, CicloLectivo cicloLectivo) {
-		this.codigo = codigo;
+	public Comision(Integer id, Aula aula, Materia materia, CicloLectivo cicloLectivo) {
+		this.id = id;
 		this.aula = aula;
 		this.materia = materia;
 		this.cicloLectivo = cicloLectivo;
 	}
 
-	public Integer getCodigo() {
-		return codigo;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setCodigo(Integer codigo) {
-		this.codigo = codigo;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Aula getAula() {
@@ -50,7 +50,7 @@ public class Comision {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(codigo);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class Comision {
 		if (getClass() != obj.getClass())
 			return false;
 		Comision other = (Comision) obj;
-		return Objects.equals(codigo, other.codigo);
+		return Objects.equals(id, other.id);
 	}
 	
 }

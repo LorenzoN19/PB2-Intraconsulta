@@ -12,7 +12,7 @@ public class CicloLectivo {
 	public CicloLectivo(Turno turno, Cuatrimestre cuatrimestre, Integer año) {
 		this.turno = turno;	
 		this.cuatrimestre = cuatrimestre;
-		this.setAño(año);
+		this.año = año;
 	}
 
 	public Turno getTurno() {

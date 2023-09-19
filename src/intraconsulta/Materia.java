@@ -6,11 +6,11 @@ import java.util.Objects;
 public class Materia {
 	private ArrayList<Materia> correlativas;
 	private String nombre;
-	private Integer codigo;
+	private Integer id;
 
-	public Materia(String nombre, Integer codigo) {
+	public Materia(String nombre, Integer id) {
 		this.nombre = nombre;
-		this.codigo = codigo;
+		this.id = id;
 		correlativas = new ArrayList<>();
 	}
 
@@ -22,12 +22,12 @@ public class Materia {
 		this.nombre = nombre;
 	}
 
-	public Integer getCodigo() {
-		return codigo;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setCodigo(Integer codigo) {
-		this.codigo = codigo;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public ArrayList<Materia> getCorrelativas() {
@@ -45,6 +45,14 @@ public class Materia {
 		return correlativas.add(correlativa);
 	}
 	
+	public boolean eliminarCorrelativa(Materia correlativa) {
+		if(correlativas.contains(correlativa)) {
+			return correlativas.remove(correlativa);
+		}
+		
+		return false;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 	    if (this == obj) {
@@ -54,12 +62,13 @@ public class Materia {
 	        return false;
 	    }
 	    Materia other = (Materia) obj;
-	    return Objects.equals(codigo, other.codigo) || Objects.equals(nombre, other.nombre);
+	    return Objects.equals(id, other.id) || Objects.equals(nombre, other.nombre);
 	}
 	
 	@Override
 	public int hashCode() {
-	    return Objects.hash(codigo, nombre);
+	    return Objects.hash(id, nombre);
 	}
+
 	
 }
