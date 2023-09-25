@@ -1,42 +1,83 @@
 package intraconsulta;
 
-import enums.Cuatrimestre;
-import enums.Turno;
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class CicloLectivo {
 
-	private Turno turno;
-	private Cuatrimestre cuatrimestre;
-	private Integer año;
+	private Integer id;
+	private LocalDate inicioInscripcion;
+	private LocalDate finInscripcion;
+	private LocalDate inicioCicloLec;
+	private LocalDate finCicloLec;
 
-	public CicloLectivo(Turno turno, Cuatrimestre cuatrimestre, Integer año) {
-		this.turno = turno;	
-		this.cuatrimestre = cuatrimestre;
-		this.año = año;
-	}
-
-	public Turno getTurno() {
-		return turno;
-	}
-	
-	public void setTurno(Turno turno) {
-		this.turno = turno;
-	}
-	
-	public Cuatrimestre getCuatrimestre() {
-		return cuatrimestre;
+	public CicloLectivo(Integer id, LocalDate inicioInscripcion, LocalDate finInscripcion, LocalDate inicioCicloLec,
+			LocalDate finCicloLec) {
+		this.id = id;
+		this.inicioInscripcion = inicioInscripcion;
+		this.finInscripcion = finInscripcion;
+		this.inicioCicloLec = inicioCicloLec;
+		this.finCicloLec = finCicloLec;
 	}
 
-	public void setCuatrimestre(Cuatrimestre cuatrimestre) {
-		this.cuatrimestre = cuatrimestre;
+	public Integer getId() {
+		return id;
 	}
 
-	public Integer getAño() {
-		return año;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public void setAño(Integer año) {
-		this.año = año;
+	public LocalDate getInicioInscripcion() {
+		return inicioInscripcion;
+	}
+
+	public void setInicioInscripcion(LocalDate fechaInicioInscripcion) {
+		this.inicioInscripcion = fechaInicioInscripcion;
+	}
+
+	public LocalDate getFinInscripcion() {
+		return finInscripcion;
+	}
+
+	public void setFinInscripcion(LocalDate fechaFinInscripcion) {
+		this.finInscripcion = fechaFinInscripcion;
+	}
+
+	public LocalDate getInicioCicloLec() {
+		return inicioCicloLec;
+	}
+
+	public void setInicioCicloLec(LocalDate fechaInicioCicLec) {
+		this.inicioCicloLec = fechaInicioCicLec;
+	}
+
+	public LocalDate getFinCicloLec() {
+		return finCicloLec;
+	}
+
+	public void setFinCicloLec(LocalDate fechaFinCicLec) {
+		this.finCicloLec = fechaFinCicLec;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(finCicloLec, finInscripcion, id, inicioCicloLec, inicioInscripcion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CicloLectivo other = (CicloLectivo) obj;
+		return Objects.equals(id, other.id) || Objects.equals(finCicloLec, other.finCicloLec)
+				|| Objects.equals(finInscripcion, other.finInscripcion)
+				|| Objects.equals(inicioCicloLec, other.inicioCicloLec)
+				|| Objects.equals(inicioInscripcion, other.inicioInscripcion);
 	}
 
 }

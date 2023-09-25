@@ -1,6 +1,10 @@
 package intraconsulta;
 
+import java.util.ArrayList;
 import java.util.Objects;
+
+import enums.DiaDeCursada;
+import enums.Turno;
 
 public class Comision {
 
@@ -8,12 +12,16 @@ public class Comision {
 	private Aula aula;
 	private Materia materia;
 	private CicloLectivo cicloLectivo;
+	private Turno turno;
+	private DiaDeCursada dia;
 
-	public Comision(Integer id, Aula aula, Materia materia, CicloLectivo cicloLectivo) {
+	public Comision(Integer id, Aula aula, Materia materia, CicloLectivo cicloLectivo, Turno turno, DiaDeCursada dia) {
 		this.id = id;
 		this.aula = aula;
 		this.materia = materia;
 		this.cicloLectivo = cicloLectivo;
+		this.turno = turno;
+		this.setDia(dia);
 	}
 
 	public Integer getId() {
@@ -48,9 +56,25 @@ public class Comision {
 		this.cicloLectivo = cicloLectivo;
 	}
 
+	public Turno getTurno() {
+		return turno;
+	}
+
+	public void setTurno(Turno turno) {
+		this.turno = turno;
+	}
+
+	public DiaDeCursada getDia() {
+		return dia;
+	}
+
+	public void setDia(DiaDeCursada dia) {
+		this.dia = dia;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(cicloLectivo, id, materia, turno);
 	}
 
 	@Override
@@ -62,7 +86,10 @@ public class Comision {
 		if (getClass() != obj.getClass())
 			return false;
 		Comision other = (Comision) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(id, other.id) || (Objects.equals(cicloLectivo, other.cicloLectivo)
+				&& Objects.equals(materia, other.materia) && turno == other.turno);
 	}
+
+	
 	
 }

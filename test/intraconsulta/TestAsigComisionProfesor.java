@@ -9,7 +9,7 @@ import org.junit.Test;
 import enums.DiaDeCursada;
 import enums.Turno;
 
-public class TestAsigComisionAlumno {
+public class TestAsigComisionProfesor {
 
 	@Test
 	public void queSePuedaInscribirUnAlumnoAUnaComision() {
@@ -24,12 +24,12 @@ public class TestAsigComisionAlumno {
 		Comision comision = new Comision(codigoComision, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.JUEVES);
 		LocalDate fechaDeNacimiento = LocalDate.of(2001, 11, 19);
 		LocalDate fechaDeIngreso = LocalDate.of(2022, 3, 10);
-		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaDeNacimiento, fechaDeIngreso);
+		Profesor profesor = new Profesor("Lorenzo", "Noceda", 43469499, fechaDeNacimiento, fechaDeIngreso);
 		Integer idAsignacion = 1;
 		
-		AsigComisionAlumno cursada = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		AsigComisionProfesor asignacion = new AsigComisionProfesor(idAsignacion, comision, profesor);
 		
-		assertNotNull(cursada);
+		assertNotNull(asignacion);
 	}
 	
 	@Test
@@ -45,11 +45,11 @@ public class TestAsigComisionAlumno {
 		Comision comision = new Comision(codigoComision, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.JUEVES);
 		LocalDate fechaDeNacimiento = LocalDate.of(2001, 11, 19);
 		LocalDate fechaDeIngreso = LocalDate.of(2022, 3, 10);
-		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaDeNacimiento, fechaDeIngreso);
+		Profesor profesor = new Profesor("Lorenzo", "Noceda", 43469499, fechaDeNacimiento, fechaDeIngreso);
 		Integer idAsignacion = 1;
 		
-		AsigComisionAlumno asignacion = new AsigComisionAlumno(idAsignacion, comision, alumno);
-		AsigComisionAlumno asignacion2 = new AsigComisionAlumno(idAsignacion, comision, alumno);
+		AsigComisionProfesor asignacion = new AsigComisionProfesor(idAsignacion, comision, profesor);
+		AsigComisionProfesor asignacion2 = new AsigComisionProfesor(idAsignacion, comision, profesor);
 		
 		assertEquals(asignacion, asignacion2);
 	}

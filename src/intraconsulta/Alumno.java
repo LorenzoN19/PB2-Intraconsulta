@@ -58,6 +58,7 @@ public class Alumno {
 		this.fechaDeIngreso = fechaDeIngreso;
 	}
 
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(dni);
