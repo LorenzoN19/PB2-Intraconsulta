@@ -72,7 +72,7 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queSePuedaEliminarUnaMateriaCorrelativa() {
+	public void queSePuedaEliminarUnaCorrelativa() {
 		Universidad unlam = new Universidad();
 		Materia pb1 = new Materia("pb1", Integer.valueOf(1332));
 		Materia pb2 = new Materia("pb2", Integer.valueOf(2331));
@@ -168,7 +168,7 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queNoSePuedaRegistrarUnAulaYaExistente() {
+	public void queNoSePuedanRegistrarDosAulasConUnMismoNumero() {
 		Universidad unlam = new Universidad();
 		Integer numero = 26, capacidadTotal = 80;
 		Aula aula = new Aula(numero, capacidadTotal);
@@ -253,7 +253,7 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queNoPuedaRegistrarUnaComisionYaExistente() {
+	public void queNoPuedaRegistrarDosComisionesConMismoId() {
 		Universidad unlam = new Universidad();
 		Materia materia = new Materia("pb2", 2300);
 		unlam.agregarMateria(materia);
@@ -265,9 +265,9 @@ public class TestUniversidad {
 		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
 		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
 		unlam.agregarCicloLectivo(cicloLectivo);
-		Integer codigo = 3454;
-		Comision comision = new Comision(codigo, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
-		Comision comision2 = new Comision(codigo, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		Integer id = 3454;
+		Comision comision = new Comision(id, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		Comision comision2 = new Comision(id, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
 		unlam.agregarComision(comision);
 				
 		boolean resultado = unlam.agregarComision(comision2);
@@ -291,7 +291,6 @@ public class TestUniversidad {
 		Comision comision = new Comision(3454, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
 		Comision comision2 = new Comision(1223, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
 		unlam.agregarComision(comision);
-		
 		
 		boolean resultado = unlam.agregarComision(comision2);
 		
@@ -320,11 +319,69 @@ public class TestUniversidad {
 		Comision comision = new Comision(2233, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
 		unlam.agregarComision(comision);
 		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
-		assertEquals(0, unlam.getAsignacionesAlumno().size());
 
-		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
 		
-		assertEquals(1, unlam.getAsignacionesAlumno().size());
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queNoSePuedaInscribirUnAlumnoAUnaComisionFueraDeLaFechaDeInscripcion() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("pb2", 2300);
+		unlam.agregarMateria(materia);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comision);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 20);
+		
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		
+		assertFalse(resultado);
+	}
+	
+	@Test
+	public void queUnAlumnoNoPuedaInscribirseAUnaComisionSiYaCursaOtraELMismoDiaYTurno() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Materia ingles = new Materia("Ingles Tecnico 2", 2240);
+		unlam.agregarMateria(ingles);
+		Aula aula1 = new Aula(15, 90);
+		unlam.agregarAula(aula1);
+		Aula aula2 = new Aula(22, 40);
+		unlam.agregarAula(aula2);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(2233, aula1, pb, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+		Comision comisionIng = new Comision(4536, aula2, ingles, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionIng);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion);
+		
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionIng.getId(), fechaInscripcion);
+		assertFalse(resultado);
 	}
 
 	@Test
@@ -355,7 +412,69 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queSeLePuedaAsignarLaNotaAUnAlumnoEnUnaComision() {
+	public void queSeLePuedaAsignarUnaNotaDeParcialAUnAlumno() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comision);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		
+		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 7);
+		boolean resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
+		
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queNoSeLePuedaAsignarUnaNotaDeParcialMenorQueUnoOMayorQueDiezAUnAlumno() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comision);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		
+		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, -2);
+		boolean resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
+
+		assertFalse(resultado);
+		
+		Nota nota2 = new Nota(TipoDeNota.PRIMER_PARCIAL, 12);
+		resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
+		
+		assertFalse(resultado);
+	}
+	
+	
+	@Test
+	public void queUnAlumnoPuedaPromocionarUnaMateria() {
 		Universidad unlam = new Universidad();
 		Materia pb2 = new Materia("pb2", 2300);
 		unlam.agregarMateria(pb2);
@@ -380,13 +499,54 @@ public class TestUniversidad {
 		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 7);
 		unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
 		unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
-		AsigComisionAlumno asignacion = unlam.buscarAsignacionAlumno(comision.getId(), alumno.getDni());
+		Integer notaFinalObtenida = unlam.obtenerNota(alumno.getDni(), pb2.getId());
+		Integer notaFinalEsperada = (nota.getValor()+nota2.getValor()) / 2;
 		
-		assertEquals(Integer.valueOf(7), asignacion.getNotaFinal().getValor());
+		assertEquals(notaFinalEsperada, notaFinalObtenida);
+	}
+	
+	public void queUnAlumnoPuedaPromocionarUnaMateriaHabiendoRecuperadoUnParcial() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comision);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		
+		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 7);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
+		
+		Integer notaFinalObtenida = unlam.obtenerNota(alumno.getDni(), pb2.getId());
+		Integer notaFinalEsperada = 0;
+		
+		assertEquals(notaFinalEsperada, notaFinalObtenida);
+		
+		Nota nota3 = new Nota(TipoDeNota.REC_SEGUNDO, 8);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota3);
+		
+		notaFinalObtenida = unlam.obtenerNota(alumno.getDni(), pb2.getId());
+		notaFinalEsperada = (nota.getValor() + nota3.getValor())/2;
+
+		assertEquals(notaFinalEsperada, notaFinalObtenida);
 	}
 	
 	@Test
-	public void queNoSeLePuedaAsignarLaNotaFinalAUnAlumnoEnUnaComisionSiNoAproboAmbosParciales() {
+	public void queUnAlumnoPuedaRendirExamenFinalSiAproboAmbosParciales() {
 		Universidad unlam = new Universidad();
 		Materia pb2 = new Materia("pb2", 2300);
 		unlam.agregarMateria(pb2);
@@ -404,10 +564,120 @@ public class TestUniversidad {
 		unlam.agregarAlumno(alumno);
 		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.JUEVES);
 		unlam.agregarComision(comision);
+		
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 4);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		Nota notaFinal = new Nota(TipoDeNota.NOTA_FINAL, 5);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
+				
+		boolean resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queUnAlumnoPuedaRendirExamenFinalHabiendoRecuperadoUnParcial() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comision);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		
+		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 4);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 2);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
+		
+		Nota notaFinal = new Nota(TipoDeNota.NOTA_FINAL, 6);
+		boolean resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		assertFalse(resultado);
+		
+		
+		Nota nota3 = new Nota(TipoDeNota.REC_SEGUNDO, 5);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota3);
+		
+		resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queUnAlumnoNoPuedaRendirExamenFinalMasDeTresVeces() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.JUEVES);
+		unlam.agregarComision(comision);
+		
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 4);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		Nota notaFinal = new Nota(TipoDeNota.NOTA_FINAL, 2);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
+				
+		unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		boolean resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		assertTrue(resultado);
+		
+		resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
+		assertFalse(resultado);		
+	}
+	
+	@Test
+	public void queUnAlumnoNoPuedaRendirExamenFinalSiNoAproboAmbosParciales() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.JUEVES);
+		unlam.agregarComision(comision);
+		
 		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
 		unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
 		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 3);
-		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 7);
 		Nota notaFinal = new Nota(TipoDeNota.NOTA_FINAL, 8);
 		unlam.registrarNota(comision.getId(), alumno.getDni(), nota);
 		unlam.registrarNota(comision.getId(), alumno.getDni(), nota2);
@@ -415,6 +685,41 @@ public class TestUniversidad {
 		boolean resultado = unlam.registrarNota(comision.getId(), alumno.getDni(), notaFinal);
 		
 		assertFalse(resultado);
+	}
+	
+	@Test
+	public void queUnAlumnoPuedaRendirUnRecuperatorio() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("pb", 2100);
+		unlam.agregarMateria(pb);
+		Materia pb2 = new Materia("pb2", 2300);
+		unlam.agregarMateria(pb2);
+		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(4553, aula, pb, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion);
+		Nota parcial1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 2);
+		Nota parcial2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		Nota recup1 = new Nota(TipoDeNota.REC_PRIMERO, 6);		
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), parcial1);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), parcial2);
+		
+		boolean resultado = unlam.registrarNota(comisionPb.getId(), alumno.getDni(), recup1);
+
+		assertTrue(resultado);
 	}
 	
 	@Test
@@ -447,75 +752,9 @@ public class TestUniversidad {
 		Nota recup2 = new Nota(TipoDeNota.REC_SEGUNDO, 9);
 		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), parcial1);
 		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), parcial2);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), recup1);
 		
-		boolean resultado = unlam.registrarNota(comisionPb.getId(), alumno.getDni(), recup1);
-		assertTrue(resultado);
-		resultado = unlam.registrarNota(comisionPb.getId(), alumno.getDni(), recup2);
-		
-		assertFalse(resultado);
-	}
-	
-	@Test
-	public void queSePuedaInscribirUnAlumnoAUnaComisionSiAproboLasCorrelativas() {
-		Universidad unlam = new Universidad();
-		Materia pb = new Materia("pb", 2100);
-		Materia pb2 = new Materia("pb2", 2300);
-		unlam.agregarMateria(pb);
-		unlam.agregarMateria(pb2);
-		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
-		Aula aula = new Aula(15, 90);
-		unlam.agregarAula(aula);
-		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
-		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
-		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
-		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
-		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
-		unlam.agregarCicloLectivo(cicloLectivo);
-		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
-		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
-		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
-		unlam.agregarAlumno(alumno);
-		Comision comisionPb = new Comision(4553, aula, pb, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
-		Comision comisionPb2 = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.JUEVES);
-		unlam.agregarComision(comisionPb);
-		unlam.agregarComision(comisionPb2);
-		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
-		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion);
-		Nota parcial1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 10);
-		Nota parcial2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
-		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), parcial1);
-		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), parcial2);
-				
-		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion);
-		
-		assertTrue(resultado);
-	}
-	
-	@Test
-	public void queNoSePuedaInscribirUnAlumnoAUnaComisionSiNoAproboLasCorrelativas() {
-		Universidad unlam = new Universidad();
-		Materia pb = new Materia("pb", 2100);
-		Materia pb2 = new Materia("pb2", 2300);
-		unlam.agregarMateria(pb);
-		unlam.agregarMateria(pb2);
-		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
-		Aula aula = new Aula(15, 90);
-		unlam.agregarAula(aula);
-		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
-		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
-		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
-		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
-		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
-		unlam.agregarCicloLectivo(cicloLectivo);
-		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
-		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
-		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
-		unlam.agregarAlumno(alumno);
-		Comision comision = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
-		unlam.agregarComision(comision);
-		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);		
-		
-		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comision.getId(), fechaInscripcion);
+		boolean resultado = unlam.registrarNota(comisionPb.getId(), alumno.getDni(), recup2);
 		
 		assertFalse(resultado);
 	}
@@ -550,6 +789,368 @@ public class TestUniversidad {
 		
 		assertEquals(Integer.valueOf(7), notaFinal);
 	}
+	
+	@Test
+	public void queUnAlumnoNoPuedaInscribirseAUnaMateriaYaAprobada() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion23 = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion23 = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec23 = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec23 = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo23 = new CicloLectivo(1, inicioInscripcion23, finInscripcion23, inicioCicloLec23, finCicloLec23);
+		unlam.agregarCicloLectivo(cicloLectivo23);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb23 = new Comision(2233, aula, pb, cicloLectivo23, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb23);
+		LocalDate fechaInscripcion23 = LocalDate.of(2023, 3, 7);
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb23.getId(), fechaInscripcion23);
+		
+		assertTrue(resultado);
+		
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 8);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
+		unlam.registrarNota(comisionPb23.getId(), alumno.getDni(), nota1);
+		unlam.registrarNota(comisionPb23.getId(), alumno.getDni(), nota2);
+		
+		LocalDate inicioInscripcion24 = LocalDate.of(2024, 3, 3);
+		LocalDate finInscripcion24 = LocalDate.of(2024, 3, 13);
+		LocalDate inicioCicloLec24 = LocalDate.of(2024, 3, 27);
+		LocalDate finCicloLec24 = LocalDate.of(2024, 7, 27);
+		CicloLectivo cicloLectivo24 = new CicloLectivo(1, inicioInscripcion24, finInscripcion24, inicioCicloLec24, finCicloLec24);
+		unlam.agregarCicloLectivo(cicloLectivo24);
+		Comision comisionPb24 = new Comision(2324, aula, pb, cicloLectivo24, Turno.NOCHE, DiaDeCursada.VIERNES);
+		unlam.agregarComision(comisionPb24);
+		
+		LocalDate fechaInscripcion24 = LocalDate.of(2024, 3, 7);
+		resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb24.getId(), fechaInscripcion24);
+		
+		assertFalse(resultado);
+	}
+
+	@Test
+	public void queUnAlumnoNoPuedaInscribirseAUnaComisionSiNoQuedanMasVacantes() {
+		Universidad unlam = new Universidad();
+		Materia materia = new Materia("Programacion Basica 2", 2300);
+		unlam.agregarMateria(materia);
+		Aula aula = new Aula(2343, 15);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Comision comision = new Comision(2233, aula, materia, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comision);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 10);
+
+		Alumno alumno1 = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno1);
+		unlam.inscribirAlumnoAComision(alumno1.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno2 = new Alumno("Lorenzo", "Noceda", 12, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno2);
+		unlam.inscribirAlumnoAComision(alumno2.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno3 = new Alumno("Lorenzo", "Noceda", 424, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno3);
+		unlam.inscribirAlumnoAComision(alumno3.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno4 = new Alumno("Lorenzo", "Noceda", 4545, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno4);
+		unlam.inscribirAlumnoAComision(alumno4.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno5 = new Alumno("Lorenzo", "Noceda", 7567, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno5);
+		unlam.inscribirAlumnoAComision(alumno5.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno6 = new Alumno("Lorenzo", "Noceda", 8678, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno6);
+		unlam.inscribirAlumnoAComision(alumno6.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno7 = new Alumno("Lorenzo", "Noceda", 989, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno7);
+		unlam.inscribirAlumnoAComision(alumno7.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno8 = new Alumno("Lorenzo", "Noceda", 32, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno8);
+		unlam.inscribirAlumnoAComision(alumno8.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno9 = new Alumno("Lorenzo", "Noceda", 345, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno9);
+		unlam.inscribirAlumnoAComision(alumno9.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno10 = new Alumno("Lorenzo", "Noceda", 787, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno10);
+		unlam.inscribirAlumnoAComision(alumno10.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno11 = new Alumno("Lorenzo", "Noceda", 434354, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno11);
+		unlam.inscribirAlumnoAComision(alumno11.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno12 = new Alumno("Lorenzo", "Noceda", 65654654, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno12);
+		unlam.inscribirAlumnoAComision(alumno12.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno13 = new Alumno("Lorenzo", "Noceda", 4564632, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno13);
+		unlam.inscribirAlumnoAComision(alumno13.getDni(), comision.getId(), fechaInscripcion);
+		Alumno alumno14 = new Alumno("Lorenzo", "Noceda", 12132, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno14);
+		unlam.inscribirAlumnoAComision(alumno14.getDni(), comision.getId(), fechaInscripcion);
+		
+		Alumno alumno15 = new Alumno("Lorenzo", "Noceda", 2353, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno15);
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno15.getDni(), comision.getId(), fechaInscripcion);
+
+		assertTrue(resultado);
+		
+		Alumno alumno16 = new Alumno("Lorenzo", "Noceda", 45634, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno16);
+		resultado = unlam.inscribirAlumnoAComision(alumno16.getDni(), comision.getId(), fechaInscripcion);
+	
+		assertFalse(resultado);
+	}
+	
+	@Test
+	public void queSePuedaInscribirUnAlumnoAUnaComisionSiAproboLasCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Materia pb2 = new Materia("Programacion Basica 2", 2500);
+		unlam.agregarMateria(pb2);
+		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion23 = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion23 = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec23 = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec23 = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo23 = new CicloLectivo(1, inicioInscripcion23, finInscripcion23, inicioCicloLec23, finCicloLec23);
+		unlam.agregarCicloLectivo(cicloLectivo23);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(2233, aula, pb, cicloLectivo23, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+
+		LocalDate fechaInscripcion23 = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion23);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 8);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota1);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota2);
+		
+		LocalDate inicioInscripcion24 = LocalDate.of(2024, 3, 3);
+		LocalDate finInscripcion24 = LocalDate.of(2024, 3, 13);
+		LocalDate inicioCicloLec24 = LocalDate.of(2024, 3, 27);
+		LocalDate finCicloLec24 = LocalDate.of(2024, 7, 27);
+		CicloLectivo cicloLectivo24 = new CicloLectivo(1, inicioInscripcion24, finInscripcion24, inicioCicloLec24, finCicloLec24);
+		unlam.agregarCicloLectivo(cicloLectivo24);
+		Comision comisionPb2 = new Comision(2324, aula, pb2, cicloLectivo24, Turno.NOCHE, DiaDeCursada.VIERNES);
+		unlam.agregarComision(comisionPb2);
+		
+		LocalDate fechaInscripcion24 = LocalDate.of(2024, 3, 7);
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion24);
+		
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queSePuedaInscribirUnAlumnoAUnaComisionSiLlevoAFinalLasCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Materia pb2 = new Materia("Programacion Basica 2", 2500);
+		unlam.agregarMateria(pb2);
+		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion23 = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion23 = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec23 = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec23 = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo23 = new CicloLectivo(1, inicioInscripcion23, finInscripcion23, inicioCicloLec23, finCicloLec23);
+		unlam.agregarCicloLectivo(cicloLectivo23);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(2233, aula, pb, cicloLectivo23, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+
+		LocalDate fechaInscripcion23 = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion23);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 4);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota1);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota2);
+		
+		LocalDate inicioInscripcion24 = LocalDate.of(2024, 3, 3);
+		LocalDate finInscripcion24 = LocalDate.of(2024, 3, 13);
+		LocalDate inicioCicloLec24 = LocalDate.of(2024, 3, 27);
+		LocalDate finCicloLec24 = LocalDate.of(2024, 7, 27);
+		CicloLectivo cicloLectivo24 = new CicloLectivo(1, inicioInscripcion24, finInscripcion24, inicioCicloLec24, finCicloLec24);
+		unlam.agregarCicloLectivo(cicloLectivo24);
+		Comision comisionPb2 = new Comision(2324, aula, pb2, cicloLectivo24, Turno.NOCHE, DiaDeCursada.VIERNES);
+		unlam.agregarComision(comisionPb2);
+		
+		LocalDate fechaInscripcion24 = LocalDate.of(2024, 3, 7);
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion24);
+		
+		assertTrue(resultado);
+	}
+	
+	@Test
+	public void queNoSePuedaInscribirUnAlumnoAUnaComisionSiNoAproboNiLlevoAFinalLasCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Materia pb2 = new Materia("Programacion Basica 2", 2500);
+		unlam.agregarMateria(pb2);
+		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion23 = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion23 = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec23 = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec23 = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo23 = new CicloLectivo(1, inicioInscripcion23, finInscripcion23, inicioCicloLec23, finCicloLec23);
+		unlam.agregarCicloLectivo(cicloLectivo23);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(2233, aula, pb, cicloLectivo23, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+
+		LocalDate fechaInscripcion23 = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion23);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 2);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 3);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota1);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota2);
+		
+		LocalDate inicioInscripcion24 = LocalDate.of(2024, 3, 3);
+		LocalDate finInscripcion24 = LocalDate.of(2024, 3, 13);
+		LocalDate inicioCicloLec24 = LocalDate.of(2024, 3, 27);
+		LocalDate finCicloLec24 = LocalDate.of(2024, 7, 27);
+		CicloLectivo cicloLectivo24 = new CicloLectivo(1, inicioInscripcion24, finInscripcion24, inicioCicloLec24, finCicloLec24);
+		unlam.agregarCicloLectivo(cicloLectivo24);
+		Comision comisionPb2 = new Comision(2324, aula, pb2, cicloLectivo24, Turno.NOCHE, DiaDeCursada.VIERNES);
+		unlam.agregarComision(comisionPb2);
+		
+		LocalDate fechaInscripcion24 = LocalDate.of(2024, 3, 7);
+		boolean resultado = unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion24);
+		
+		assertFalse(resultado);
+	}
+	
+	@Test
+	public void queUnAlumnoNoPuedaPromocionarUnaMateriaSiAdeudaFinalDeAlgunaDeSusCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Materia pb2 = new Materia("Programacion Basica 2", 2500);
+		unlam.agregarMateria(pb2);
+		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion23 = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion23 = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec23 = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec23 = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo23 = new CicloLectivo(1, inicioInscripcion23, finInscripcion23, inicioCicloLec23, finCicloLec23);
+		unlam.agregarCicloLectivo(cicloLectivo23);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(2233, aula, pb, cicloLectivo23, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+
+		LocalDate fechaInscripcion23 = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion23);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 4);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota1);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota2);
+		
+		LocalDate inicioInscripcion24 = LocalDate.of(2024, 3, 3);
+		LocalDate finInscripcion24 = LocalDate.of(2024, 3, 13);
+		LocalDate inicioCicloLec24 = LocalDate.of(2024, 3, 27);
+		LocalDate finCicloLec24 = LocalDate.of(2024, 7, 27);
+		CicloLectivo cicloLectivo24 = new CicloLectivo(1, inicioInscripcion24, finInscripcion24, inicioCicloLec24, finCicloLec24);
+		unlam.agregarCicloLectivo(cicloLectivo24);
+		
+		Comision comisionPb2 = new Comision(2324, aula, pb2, cicloLectivo24, Turno.NOCHE, DiaDeCursada.VIERNES);
+		unlam.agregarComision(comisionPb2);
+		LocalDate fechaInscripcion24 = LocalDate.of(2024, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion24);
+		
+		Nota nota3 = new Nota(TipoDeNota.PRIMER_PARCIAL, 8);
+		Nota nota4 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
+		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota3);
+		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota4);
+		
+		Integer notaFinalEsperada = 0;
+		Integer notaFinalObtenida = unlam.obtenerNota(alumno.getDni(), pb2.getId());
+		
+		assertEquals(notaFinalEsperada, notaFinalObtenida);
+	}
+	
+	@Test
+	public void queUnAlumnoNoPuedaRendirExamenFinalSiAdeudaElFinalDeAlgunaDeSusCorrelativas() {
+		Universidad unlam = new Universidad();
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
+		Materia pb2 = new Materia("Programacion Basica 2", 2500);
+		unlam.agregarMateria(pb2);
+		unlam.agregarCorrelatividad(pb2.getId(), pb.getId());
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion23 = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion23 = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec23 = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec23 = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo23 = new CicloLectivo(1, inicioInscripcion23, finInscripcion23, inicioCicloLec23, finCicloLec23);
+		unlam.agregarCicloLectivo(cicloLectivo23);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno);
+		Comision comisionPb = new Comision(2233, aula, pb, cicloLectivo23, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb);
+
+		LocalDate fechaInscripcion23 = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb.getId(), fechaInscripcion23);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 4);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 5);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota1);
+		unlam.registrarNota(comisionPb.getId(), alumno.getDni(), nota2);
+		
+		LocalDate inicioInscripcion24 = LocalDate.of(2024, 3, 3);
+		LocalDate finInscripcion24 = LocalDate.of(2024, 3, 13);
+		LocalDate inicioCicloLec24 = LocalDate.of(2024, 3, 27);
+		LocalDate finCicloLec24 = LocalDate.of(2024, 7, 27);
+		CicloLectivo cicloLectivo24 = new CicloLectivo(1, inicioInscripcion24, finInscripcion24, inicioCicloLec24, finCicloLec24);
+		unlam.agregarCicloLectivo(cicloLectivo24);
+		
+		Comision comisionPb2 = new Comision(2324, aula, pb2, cicloLectivo24, Turno.NOCHE, DiaDeCursada.VIERNES);
+		unlam.agregarComision(comisionPb2);
+		LocalDate fechaInscripcion24 = LocalDate.of(2024, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion24);
+		
+		Nota nota3 = new Nota(TipoDeNota.PRIMER_PARCIAL, 6);
+		Nota nota4 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 4);
+		Nota nota5 = new Nota(TipoDeNota.NOTA_FINAL, 7);
+		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota3);
+		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota4);
+		
+		boolean resultado = unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota5);
+		
+		assertFalse(resultado);
+	}
+	
+	
 	
 	@Test
 	public void queSePuedaObtenerElArregloDeMateriasAprobadasPorUnAlumno() {
@@ -728,7 +1329,7 @@ public class TestUniversidad {
 	}
 	
 	@Test
-	public void queCadaVeinteInscriptosSePuedaAsignarOtroProfesor() {
+	public void queCadaVeinteInscriptosSePuedaAsignarUnProfesorMas() {
 		Universidad unlam = new Universidad();
 		Materia materia = new Materia("Programacion Basica 2", 2300);
 		unlam.agregarMateria(materia);

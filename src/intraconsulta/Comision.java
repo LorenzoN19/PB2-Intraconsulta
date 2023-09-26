@@ -1,6 +1,5 @@
 package intraconsulta;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import enums.DiaDeCursada;
@@ -21,7 +20,7 @@ public class Comision {
 		this.materia = materia;
 		this.cicloLectivo = cicloLectivo;
 		this.turno = turno;
-		this.setDia(dia);
+		this.dia = dia;
 	}
 
 	public Integer getId() {
