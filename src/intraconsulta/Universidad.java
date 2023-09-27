@@ -431,6 +431,31 @@ public class Universidad {
 	private void imprimir(String mensaje) {
 		System.out.println(mensaje);
 	}
+	
+	public ArrayList<AsigComisionAlumno> obtenerReporteDeNotasPorComision(Integer idComision) {
+		ArrayList<AsigComisionAlumno> asignaciones = new ArrayList<>();
+		for(AsigComisionAlumno asignacion: asignacionesAlumno) {
+			Comision comision = asignacion.getComision();
+			Integer notaFinal = asignacion.getNotaFinal().getValor();
+			if(comision.getId().equals(idComision) && notaFinal>0) {
+				asignaciones.add(asignacion);
+				if(asignaciones.size()==1) {
+					imprimir("Reporte de notas de la Comision " + comision.getId() +
+							" - " + comision.getMateria().getNombre() + ":");
+				}
+				mostrarInformacionSobreReporteDeNotas(asignacion);
+			}
+		}
+		imprimir("");
+		return asignaciones;
+	}
+	
+	public void mostrarInformacionSobreReporteDeNotas(AsigComisionAlumno asignacion) {
+		Alumno alumno = asignacion.getAlumno();
+		
+		imprimir(alumno.getDni() + " " + alumno.getNombre() + " " + alumno.getApellido() + " | " +
+		"Nota: " + asignacion.getNotaFinal().getValor());
+	}
 
 // COMISION-PROFESOR //
 	
@@ -575,7 +600,6 @@ public class Universidad {
 	public void setCiclosLectivos(ArrayList<CicloLectivo> ciclosLectivos) {
 		this.ciclosLectivos = ciclosLectivos;
 	}
-
 	
 
 }

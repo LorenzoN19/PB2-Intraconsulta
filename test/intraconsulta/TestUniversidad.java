@@ -1155,8 +1155,8 @@ public class TestUniversidad {
 	@Test
 	public void queSePuedaObtenerElArregloDeMateriasAprobadasPorUnAlumno() {
 		Universidad unlam = new Universidad();
-		Materia pb2 = new Materia("Programacion Basica 2", 2300);
-		unlam.agregarMateria(pb2);
+		Materia pb = new Materia("Programacion Basica", 2300);
+		unlam.agregarMateria(pb);
 		Materia ingles = new Materia("Ingles Tecnico", 4410);
 		unlam.agregarMateria(ingles);
 		Aula aula = new Aula(15, 90);
@@ -1171,19 +1171,21 @@ public class TestUniversidad {
 		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
 		Alumno alumno = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
 		unlam.agregarAlumno(alumno);
-		Comision comisionPb2 = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		Comision comisionPb2 = new Comision(2233, aula, pb, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
 		unlam.agregarComision(comisionPb2);
 		Comision comisionIng = new Comision(1331, aula, ingles, cicloLectivo, Turno.MAÑANA, DiaDeCursada.SABADO);
 		unlam.agregarComision(comisionIng);
 		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
 		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionPb2.getId(), fechaInscripcion);
 		unlam.inscribirAlumnoAComision(alumno.getDni(), comisionIng.getId(), fechaInscripcion);
-		Nota nota = new Nota(TipoDeNota.PRIMER_PARCIAL, 7);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 8);
 		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 7);
-		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota);
+		Nota nota3 = new Nota(TipoDeNota.PRIMER_PARCIAL, 10);
+		Nota nota4 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
+		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota1);
 		unlam.registrarNota(comisionPb2.getId(), alumno.getDni(), nota2);
-		unlam.registrarNota(comisionIng.getId(), alumno.getDni(), nota);
-		unlam.registrarNota(comisionIng.getId(), alumno.getDni(), nota2);
+		unlam.registrarNota(comisionIng.getId(), alumno.getDni(), nota3);
+		unlam.registrarNota(comisionIng.getId(), alumno.getDni(), nota4);
 		
 		ArrayList<Materia> materiasAprobadas = unlam.obtenerMateriasAprobadas(alumno.getDni());
 		Integer valorEsperado = 2;
@@ -1270,6 +1272,45 @@ public class TestUniversidad {
 		Integer valorEsperado = 2;
 		
 		assertEquals(valorEsperado, Integer.valueOf(materiasNoCursadas.size()));
+	}
+	
+	@Test
+	public void queSePuedaObtenerElReporteDeNotasDeAlumnosDeUnaComision() {
+		Universidad unlam = new Universidad();
+		Materia pb2 = new Materia("Programacion Basica 2", 2300);
+		unlam.agregarMateria(pb2);
+		Aula aula = new Aula(15, 90);
+		unlam.agregarAula(aula);
+		LocalDate inicioInscripcion = LocalDate.of(2023, 3, 3);
+		LocalDate finInscripcion = LocalDate.of(2023, 3, 13);
+		LocalDate inicioCicloLec = LocalDate.of(2023, 3, 27);
+		LocalDate finCicloLec = LocalDate.of(2023, 7, 27);
+		CicloLectivo cicloLectivo = new CicloLectivo(1, inicioInscripcion, finInscripcion, inicioCicloLec, finCicloLec);
+		unlam.agregarCicloLectivo(cicloLectivo);
+		LocalDate fechaNac = LocalDate.of(2001, 11, 19);
+		LocalDate fechaIng = LocalDate.of(2023, 3, 7);
+		Alumno alumno1 = new Alumno("Lorenzo", "Noceda", 43469499, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno1);
+		Alumno alumno2 = new Alumno("Juan", "Perez", 34523644, fechaNac, fechaIng);
+		unlam.agregarAlumno(alumno2);
+		Comision comisionPb2 = new Comision(2233, aula, pb2, cicloLectivo, Turno.MAÑANA, DiaDeCursada.MARTES);
+		unlam.agregarComision(comisionPb2);
+		LocalDate fechaInscripcion = LocalDate.of(2023, 3, 7);
+		unlam.inscribirAlumnoAComision(alumno1.getDni(), comisionPb2.getId(), fechaInscripcion);
+		unlam.inscribirAlumnoAComision(alumno2.getDni(), comisionPb2.getId(), fechaInscripcion);
+		Nota nota1 = new Nota(TipoDeNota.PRIMER_PARCIAL, 8);
+		Nota nota2 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 9);
+		Nota nota3 = new Nota(TipoDeNota.PRIMER_PARCIAL, 9);
+		Nota nota4 = new Nota(TipoDeNota.SEGUNDO_PARCIAL, 10);
+		unlam.registrarNota(comisionPb2.getId(), alumno1.getDni(), nota1);
+		unlam.registrarNota(comisionPb2.getId(), alumno1.getDni(), nota2);
+		unlam.registrarNota(comisionPb2.getId(), alumno2.getDni(), nota3);
+		unlam.registrarNota(comisionPb2.getId(), alumno2.getDni(), nota4);
+		
+		ArrayList<AsigComisionAlumno> asignaciones = unlam.obtenerReporteDeNotasPorComision(comisionPb2.getId());
+		Integer valorEsperado = 2;
+		
+		assertEquals(valorEsperado, Integer.valueOf(asignaciones.size()));
 	}
 
 	// COMISION-PROFESOR //
